@@ -16,11 +16,11 @@ def menu():
 
 def validatePassword(password):
     while True:
-        if len(password) != 4 or not password.isdigit() and password != '1234' '4321':
+        if len(password) != 4 or not password.isdigit() or password in ('1234', '4321'):
             print("EL PIN DEBE TENER 4 DÍGITOS")
             password = input("Ingrese su PIN: ")
             continue
-        break
+        return password
 
 def changePassword(password):
     while True: 
@@ -46,55 +46,88 @@ def changePassword(password):
             else:
                 print("El PIN no es igual, vuelva a intentarlo.")
 
-def transferMoney(balance):
+def validateAmountToTransfer(balance):
     while True:
-        to_account = input("Ingrese la cuenta a la que va a transferir el dinero")
-                
-        if len(to_account) != 10 and not to_account.isdigit():
+        try:
+            amount = int(input("Ingrese la cantidad que desea transferir: "))
+        except ValueError:
+            print("Ingrese una cantidad válida.")
+            continue
+        if amount < 1000:
+            print("La cantidad mínima para transferir es de 1000.")
+            continue
+        elif amount > balance:
+            print("No tiene saldo suficiente para realizar la transferencia.")
+            continue
+
+        return amount
+    
+def validateAccountNumber():
+    while True:  
+        to_account = input("Ingrese la cuenta a la que va a transferir el dinero: ")      
+        if len(to_account) != 10 or not to_account.isdigit():
             print("Ingrese un numero de cuenta valido (10 digitos)") 
-        
+            continue
+
+        return to_account
+
+def transferMoney(balance):
+    amount = validateAmountToTransfer(balance)
+
+    to_account = validateAccountNumber()
+
+    balance -= amount
+    print(f"Se han transferido {amount} a la cuenta {to_account}. \nSu saldo actual es de {balance}.")
+
+    return balance
+
 def again():
     while True:
         answer = input("Desea realizar otra operación? (Si/No):").strip().lower()
 
-        if answer not in ('si' 'no'):
-            print("Ingrese una respuesta válida (Si/No)")
+        if answer not in ('si', 'no'):
+            print("Respuesta no válida. Por favor ingrese 'Si' o 'No'.")
             continue
-        elif answer != "si":
+        elif answer != 'si':
             print("    GRACIAS POR USAR NUESTRO SERVICIO!")
-            sys.exit() 
+            sys.exit()
         else:
             break
+            
         
 def atm(option, password, balance):
-    keep = True
-    while keep:
         if option == 0:
             print("    GRACIAS POR USAR NUESTRO SERVICIO!")
             sys.exit()
 
         if option == 1:
-            print(f"\nSu salto actual es de {balance}")
+            print(f"\nSu saldo actual es de {balance}")
             print("\n" + "-"*40 + "\n")
-            keep = False
             again()
             return password, balance
-        elif option == 2:
-            transferMoney(balance)
-
-
-
-            
         
+        elif option == 2:
+            balance = transferMoney(balance)
+            print("\n" + "-"*40 + "\n")
+            again()
+            return password, balance
 
-         
 
 def main():
     print("---BIENVENIDO AL CAJERO AUTOMÁTICO---")
     print("SI ES SU PRIMERA VEZ USANDO EL SERVICIO DEBE CREAR UN NUEVO PIN")  
-    balance = 1_500_000  
-    password = input("Ingrese su PIN: ")
-    validatePassword(password)
+    balance = 1_500_000 
+    while True:
+        optionPIN = input("1. Ya tengo un PIN\n2. Crear un nuevo PIN\nIngrese su opción: ")
+        if optionPIN == "1":
+            password = input("Ingrese su PIN: ")
+            password = validatePassword(password)
+        elif optionPIN == "2":
+            password = changePassword('')
+        else:
+            print("Opción no válida.")
+            continue
+        break    
 
     while True:
         option = menu()
