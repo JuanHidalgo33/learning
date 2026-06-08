@@ -1,0 +1,35 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: black;
+    font-family: Arial, sans-serif;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+#nav-div{
+    display: flex;
+    padding: 30px;
+    background-color: cyan;
+    justify-content: center;
+    align-items: center;
+}
+
+#nav-div ul{
+    display: flex;
+    gap: 30px;
+}
+
+#nav-div ul li{
+    text-align: center;
+    color: white;
+    list-style: none;
+    padding: 10px;
+}
