@@ -1,22 +1,13 @@
 import random
 
 def choose_difficult():
+    difficutlies ={
+        "1": 10,
+        "2": 100,
+        "3": 1000
+    }
+    
     print("---ELIGE LA DIFICULTAD PARA JUGAR---")
-    while True:
-        try: 
-            difficult = int(input("1. FÁCIL (0 al 10)\n2. MEDIO (0 al 25)\n3. DIFICIL (0 al 50)\nDIFICULTAD: "))
-        except ValueError:
-            print("Ingrese una respuesta válida.")
-            continue
-
-        if difficult == 1:
-            return random.randint(0, 10), 10
-        elif difficult == 2:
-            return random.randint(0, 25), 25
-        elif difficult == 3:
-            return random.randint(0, 50), 50
-        else:
-            print("Ingrese una opcion válida.")
 
 def ask_number(max_range):
     while True:   
