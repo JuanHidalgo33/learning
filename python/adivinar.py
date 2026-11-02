@@ -1,6 +1,18 @@
 import random
-def choose_difficult():
+import json
 
+def load_history(history):
+    try:
+        with open("history.json", "r", encoding="utf-8") as file:
+            history = json.load(file)
+    except FileNotFoundError:
+        history = []
+
+def save_history(history):
+    with open("history.json", "w", encoding="utf-8") as file:
+        json.dump(history, file, indent=4, ensure_ascii=False)
+
+def choose_difficult():
     difficulties = { 
         1:{"name": "Easy",
             "max": 10,
@@ -21,7 +33,7 @@ def choose_difficult():
     print("---CHOOSE A DIFFICULTY---")
 
     for option, difficulty in difficulties.items():
-        print(f"{option}.{difficulty['name']} (O to {difficulty['max']}, MAX TRIES: {difficulty['max_tries']})")
+        print(f"{option}.{difficulty['name']} (0 to {difficulty['max']}, MAX TRIES: {difficulty['max_tries']})")
 
     while True:
         try: 
@@ -100,6 +112,7 @@ def main():
     loses = 0 
     total_attempts = 0
     history = []
+    load_history(history)
     while True:
         games += 1
         result, attempts, tries_remaining, difficulty = game()
@@ -113,7 +126,6 @@ def main():
         result_text = "Win" if result else "Lose"
 
         history.append({"result": result_text, "difficulty": difficulty['name'], "attempts": attempts, "tries_remaining": tries_remaining})
-        
         if not reset():
             print("THANKS FOR PLAYING") 
             games_count(games, wins, loses, total_attempts)
